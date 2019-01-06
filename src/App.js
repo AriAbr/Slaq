@@ -3,6 +3,7 @@ import './App.css';
 import * as firebase from 'firebase';
 // import { Route } from 'react-router-dom';
 import RoomList from './components/RoomList';
+import MessageList from './components/MessageList';
 
 // Initialize Firebase
 var config = {
@@ -16,14 +17,40 @@ var config = {
 firebase.initializeApp(config);
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeRoom: undefined,
+      activeIndex: undefined,
+      activeRoomKey: '',
+      activeRoomName: '',
+    };
+  }
+
+  handleRoomClick(room, index) {
+    const isSameRoom = room === this.state.activeRoom;
+    if (!isSameRoom) {
+      this.setState({ activeRoom: room, activeRoomKey: room.key, activeIndex: index, activeRoomName: room.name });
+    }
+  }
+
   render() {
     return (
       <div className="App">
         This is the App div
         <aside>
-          <RoomList firebase={firebase} />
+          <RoomList
+            firebase={firebase}
+            handleRoomClick={(room, index) => this.handleRoomClick(room, index)}
+            activeRoomKey={this.state.activeRoomKey}
+          />
         </aside>
         <main>
+          <MessageList
+            firebase={firebase}
+            activeRoomKey={this.state.activeRoomKey}
+            activeRoomName={this.state.activeRoomName}
+          />
         </main>
       </div>
     );

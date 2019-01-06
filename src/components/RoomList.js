@@ -34,11 +34,30 @@ class RoomList extends Component {
   }
 
   render() {
-    const rooms = this.state.rooms.map( (room, index) =>
-      <section className="room-name" key={index}>
-        {room.name}
-      </section>
-    );
+    const rooms = this.state.rooms.map( (room, index) => {
+      if (this.props.activeRoomKey === room.key) {
+        return (
+          <button
+            className="room-button"
+            id="active-room-button"
+            key={index}
+            onClick={() => this.props.handleRoomClick(room, index)}
+          >
+            {room.name.toUpperCase()}
+          </button>
+        );
+      } else {
+        return (
+          <button
+            className="room-button"
+            key={index}
+            onClick={() => this.props.handleRoomClick(room, index)}
+          >
+            {room.name}
+          </button>
+        );
+      }
+    });
     return (
       <div>
         This is the RoomList component
