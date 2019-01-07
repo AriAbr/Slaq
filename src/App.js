@@ -4,6 +4,7 @@ import * as firebase from 'firebase';
 // import { Route } from 'react-router-dom';
 import RoomList from './components/RoomList';
 import MessageList from './components/MessageList';
+import User from './components/User';
 
 // Initialize Firebase
 var config = {
@@ -24,7 +25,12 @@ class App extends Component {
       activeIndex: undefined,
       activeRoomKey: '',
       activeRoomName: '',
+      user: undefined,
     };
+  }
+
+  setUser(user){
+    this.setState({ user: user });
   }
 
   handleRoomClick(room, index) {
@@ -39,6 +45,11 @@ class App extends Component {
       <div className="App">
         This is the App div
         <aside>
+          <User
+            firebase={firebase}
+            setUser={(user) => this.setUser(user)}
+            user={this.state.user}
+          />
           <RoomList
             firebase={firebase}
             handleRoomClick={(room, index) => this.handleRoomClick(room, index)}
