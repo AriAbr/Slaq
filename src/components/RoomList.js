@@ -6,7 +6,6 @@ class RoomList extends Component {
     super(props);
     this.state = {
       rooms: [],
-      newRoomName: "",
     };
     this.roomsRef = this.props.firebase.database().ref('rooms');
   }
@@ -38,32 +37,15 @@ class RoomList extends Component {
     });
   }
 
-
-  // // Get a reference to our posts
-  // var ref = db.ref("server/saving-data/fireblog/posts");
-  //
-  // // Get the data on a post that has been removed
-  // ref.on("child_removed", function(snapshot) {
-  //   var deletedPost = snapshot.val();
-  //   console.log("The blog post titled '" + deletedPost.title + "' has been deleted");
-  // });
-
-
-
-
-
-  handleRoomSubmit(e) {
-    e.preventDefault();
-    if (!this.state.newRoomName) {return}
-    const newRoomName = this.state.newRoomName;
-    this.roomsRef.push({
-      name: newRoomName
-    });
-    this.setState({ newRoomName: '' });
-  }
-
-  handleRoomInputChange(e) {
-    this.setState({ newRoomName: e.target.value });
+  handleCreateButtonClick() {
+    const newRoomName = prompt(`Enter name for your room:`);
+    if (newRoomName == null || newRoomName == "") {
+      alert("To create a new room, you must give it a name.")
+    } else {
+      this.roomsRef.push({
+        name: newRoomName
+      });
+    }
   }
 
   render() {
@@ -116,33 +98,26 @@ class RoomList extends Component {
         This is the RoomList component
         <h1 id="room-list-title">Bloc Chat</h1>
         {rooms}
-        <form onSubmit={ (e) => this.handleRoomSubmit(e) }>
-          <fieldset>
-            <legend>Create New Chat Room</legend>
-            <label>
-              Name:
-              <input
-                type="text"
-                id="new-room-input"
-                value={ this.state.newRoomName }
-                onChange={ (e) => this.handleRoomInputChange(e) }
-              />
-            </label>
-            <input type="submit" value="Submit" />
-          </fieldset>
-        </form>
-        <button
-          id="delete-cancel-button"
-          onClick={() => this.props.handleDeleteButtonClick()}
-        >
-          {deleteButtonText}
-        </button>
-        <button
-          id="rename-room-button"
-          onClick={() => this.props.handleRenameButtonClick()}
-        >
-          {renameButtonText}
-        </button>
+        <section id="room-action-buttons">
+          <button
+            id="create-room-button"
+            onClick={() => this.handleCreateButtonClick()}
+          >
+            Create a New Room
+          </button>
+          <button
+            id="delete-cancel-button"
+            onClick={() => this.props.handleDeleteButtonClick()}
+          >
+            {deleteButtonText}
+          </button>
+          <button
+            id="rename-room-button"
+            onClick={() => this.props.handleRenameButtonClick()}
+          >
+            {renameButtonText}
+          </button>
+        </section>
       </div>
     );
   }

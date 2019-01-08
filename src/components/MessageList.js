@@ -103,16 +103,16 @@ class MessageList extends Component {
           <form onSubmit={ (e) => this.handleMessageSubmit(e) }>
             <fieldset>
               <legend>Send a Message</legend>
-              <label>
-                Meesage:
+              {/* <label>
+                 Meesage: */}
                 <input
                   type="text"
                   id="new-message-input"
                   value={ this.state.newMessageContent }
                   onChange={ (e) => this.handleMessageInputChange(e) }
                 />
-              </label>
-              <input type="submit" value="Submit" />
+              {/* </label> */}
+              <input type="submit" value="Send" />
             </fieldset>
           </form>
         </div>

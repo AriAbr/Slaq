@@ -86,7 +86,7 @@ class App extends Component {
       var newName = prompt(`Please enter a new name for ${room.name}:`);
 
       if (newName == null || newName == "") {
-        alert("If you would like to rename your room, you must enter a new name.")
+        alert("to rename a room, you must enter a new name.")
       } else {
         console.log("rename initiated");
         console.log("reconfiguring state");
