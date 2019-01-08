@@ -63,7 +63,7 @@ class App extends Component {
 
   handleSpecialRoomClick(room, index) {
     const isSameRoom = room === this.state.activeRoom;
-    const roomRef = firebase.database().ref(`rooms/${room.key}`);
+    const clickedRoomRef = firebase.database().ref(`rooms/${room.key}`);
     if (this.state.roomButtonFunction === "delete") {
       //delete the room
       if (window.confirm(`Are you sure you want to DELETE the room: "${room.name}"? This will permanently delete "${room.name}" for all participants.`)) {
@@ -77,7 +77,7 @@ class App extends Component {
             activeRoomName: ''
           });
         }
-        roomRef.remove();
+        clickedRoomRef.remove();
       }
     }
     else if (this.state.roomButtonFunction === "rename") {
@@ -85,6 +85,7 @@ class App extends Component {
       console.log(`rename special function executed`);
       var newName = prompt(`Please enter a new name for ${room.name}:`);
 
+      // eslint-disable-next-line
       if (newName == null || newName == "") {
         alert("to rename a room, you must enter a new name.")
       } else {
@@ -101,7 +102,7 @@ class App extends Component {
         }
         var updates = {};
         updates['/name'] = newName;
-        return roomRef.update(updates);
+        return clickedRoomRef.update(updates);
       }
     }
   }

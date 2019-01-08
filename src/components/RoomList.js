@@ -39,6 +39,7 @@ class RoomList extends Component {
 
   handleCreateButtonClick() {
     const newRoomName = prompt(`Enter name for your room:`);
+    // eslint-disable-next-line
     if (newRoomName == null || newRoomName == "") {
       alert("To create a new room, you must give it a name.")
     } else {

@@ -17,6 +17,12 @@ class MessageList extends Component {
       message.key = snapshot.key;
       this.setState({ messages: this.state.messages.concat( message ) });
     });
+    this.messagesRef.on('child_removed', snapshot => {
+      const deletedMessage = snapshot.val();
+      deletedMessage.key = snapshot.key;
+      const newMessagesArray = this.state.messages.filter( message => message.key !== deletedMessage.key);
+      this.setState({ messages: newMessagesArray });
+    });
   }
 
   handleMessageSubmit(e) {
@@ -36,6 +42,19 @@ class MessageList extends Component {
     this.setState({ newMessageContent: e.target.value });
   }
 
+  handleDeleteMessageClick(message, index) {
+    const deleteMessageRef = this.props.firebase.database().ref(`messages/${message.key}`);
+    console.log(`handleDeleteMessageClick executed on "${message.content}"`);
+    //confirm -- do you want to delete? cant be undone...
+    if (window.confirm(`Are you sure you want to DELETE this message? This cannot be undone.`)) {
+      console.log(`message delete confirm executed`);
+      deleteMessageRef.remove();
+
+      //if yes, delete message
+      //make new event listener
+    }
+  }
+
   convertTimestamp(timestamp) {
     var d = new Date(timestamp),	// Convert the passed timestamp to milliseconds
   		yyyy = d.getFullYear(),
@@ -53,6 +72,7 @@ class MessageList extends Component {
   	} else if (hh === 12) {
   		h = 12;
   		ampm = 'PM';
+    // eslint-disable-next-line
   	} else if (hh == 0) {
   		h = 12;
   	}
@@ -85,9 +105,16 @@ class MessageList extends Component {
         .map( (message, index) => {
           return (
             <div className="message" key={index}>
+              THIS IS THE BEGINNING OF A MESSAGE
               <p className="message-username">{message.username}</p>
               <p className="message-content">{message.content}</p>
               <p className="message-sentAt">{this.convertTimestamp(message.sentAt)}</p>
+              <button
+                className="delete-message-button"
+                onClick={() => this.handleDeleteMessageClick(message, index)}
+              >
+                Delete
+              </button>
             </div>
           );
         });
