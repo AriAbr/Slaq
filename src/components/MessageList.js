@@ -37,7 +37,14 @@ class MessageList extends Component {
   }
 
   render() {
-    if (!this.props.activeRoomName) {
+    if (!this.props.user) {
+      return (
+        <div>
+        This is the MessageList component
+          <p id="choose-room-message">Please sign in to view and send messages</p>
+        </div>
+      );
+    } else if (!this.props.activeRoomName) {
       return (
         <div>
         This is the MessageList component

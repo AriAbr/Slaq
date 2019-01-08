@@ -17,6 +17,8 @@ class User extends Component {
     });
 
     this.props.firebase.auth().signInWithPopup( provider );
+    // this.props.firebase.auth().signInWithRedirect(provider);
+
   }
 
   signOut() {
