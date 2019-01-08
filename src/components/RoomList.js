@@ -19,10 +19,21 @@ class RoomList extends Component {
       this.setState({ rooms: this.state.rooms.concat( room ) });
     });
     this.roomsRef.on('child_removed', snapshot => {
-      console.log('child_removed event triggered');
       const deletedRoom = snapshot.val();
       deletedRoom.key = snapshot.key;
       const newRoomsArray = this.state.rooms.filter( room => room.key !== deletedRoom.key);
+      this.setState({ rooms: newRoomsArray });
+    });
+    this.roomsRef.on('child_changed', snapshot => {
+      const changedRoom = snapshot.val();
+      changedRoom.key = snapshot.key;
+      const newRoomsArray = this.state.rooms.map(room => {
+        if (room.key === changedRoom.key) {
+          return changedRoom
+        } else {
+          return room
+        }
+      })
       this.setState({ rooms: newRoomsArray });
     });
   }
@@ -57,20 +68,23 @@ class RoomList extends Component {
 
   render() {
 
-    var deleteButtonText = undefined;
-    var roomButtonClass = undefined;
+    var deleteButtonText = "Delete a Room";
+    var renameButtonText = "Rename a Room";
+    var roomButtonClass = "room-enter-button";
     var roomButtonOnClick = undefined;
 
     const rooms = this.state.rooms.map( (room, index) => {
 
-      if (this.props.enterOrDeleteRoom === "enter") {
-        deleteButtonText = "Delete a Room";
-        roomButtonClass = "room-enter-button";
+      if (this.props.roomButtonFunction === "enter") {
         roomButtonOnClick = () => this.props.handleRoomEnterClick(room, index);
       } else {
-        deleteButtonText = "Cancel";
-        roomButtonClass = "room-delete-button";
-        roomButtonOnClick = () => this.props.handleRoomDeleteClick(room, index);
+        roomButtonClass = `room-${this.props.roomButtonFunction}-button`;
+        roomButtonOnClick = () => this.props.handleSpecialRoomClick(room, index);
+        if (this.props.roomButtonFunction === "delete") {
+          deleteButtonText = "Cancel";
+        } else if (this.props.roomButtonFunction === "rename") {
+          renameButtonText = "Cancel";
+        }
       }
 
       if (this.props.activeRoomKey === room.key) {
@@ -119,9 +133,15 @@ class RoomList extends Component {
         </form>
         <button
           id="delete-cancel-button"
-          onClick={() => this.props.handleDeleteCancelClick()}
+          onClick={() => this.props.handleDeleteButtonClick()}
         >
           {deleteButtonText}
+        </button>
+        <button
+          id="rename-room-button"
+          onClick={() => this.props.handleRenameButtonClick()}
+        >
+          {renameButtonText}
         </button>
       </div>
     );

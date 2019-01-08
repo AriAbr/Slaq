@@ -26,7 +26,7 @@ class App extends Component {
       activeRoomKey: '',
       activeRoomName: '',
       user: undefined,
-      enterOrDeleteRoom: "enter"
+      roomButtonFunction: "enter"
     };
   }
 
@@ -40,41 +40,72 @@ class App extends Component {
       this.setState({
         activeRoom: room,
         activeIndex: index,
-        activeRoomKey: room.key, 
+        activeRoomKey: room.key,
         activeRoomName: room.name });
     }
   }
 
-  handleDeleteCancelClick() {
-    if (this.state.enterOrDeleteRoom === "enter"){
-      this.setState({ enterOrDeleteRoom: "delete" });
+  handleDeleteButtonClick() {
+    if (this.state.roomButtonFunction !== "delete"){
+      this.setState({ roomButtonFunction: "delete" });
     } else {
-      this.setState({ enterOrDeleteRoom: "enter" });
+      this.setState({ roomButtonFunction: "enter" });
     }
   }
 
-  handleRoomDeleteClick(room, index) {
+  handleRenameButtonClick() {
+    if (this.state.roomButtonFunction !== "rename"){
+      this.setState({ roomButtonFunction: "rename" });
+    } else {
+      this.setState({ roomButtonFunction: "enter" });
+    }
+  }
+
+  handleSpecialRoomClick(room, index) {
     const isSameRoom = room === this.state.activeRoom;
-    const roomDeleteRef = firebase.database().ref(`rooms/${room.key}`);
-
-    if (window.confirm("Are you sure you want to delete this room? This cannot be undone.")) {
-      console.log(`delete confirm executed`);
-      this.setState({ enterOrDeleteRoom: "enter" });
-      if (isSameRoom) {
-        this.setState({
-          activeRoom: undefined,
-          activeRoomKey: '',
-          activeIndex: undefined,
-          activeRoomName: '' });
+    const roomRef = firebase.database().ref(`rooms/${room.key}`);
+    if (this.state.roomButtonFunction === "delete") {
+      //delete the room
+      if (window.confirm(`Are you sure you want to DELETE the room: "${room.name}"? This will permanently delete "${room.name}" for all participants.`)) {
+        console.log(`delete confirm executed`);
+        this.setState({ roomButtonFunction: "enter" });
+        if (isSameRoom) {
+          this.setState({
+            activeRoom: undefined,
+            activeRoomKey: '',
+            activeIndex: undefined,
+            activeRoomName: ''
+          });
+        }
+        roomRef.remove();
       }
-      roomDeleteRef.remove();
     }
+    else if (this.state.roomButtonFunction === "rename") {
+      // rename the room
+      console.log(`rename special function executed`);
+      var newName = prompt(`Please enter a new name for ${room.name}:`);
 
-    // console.log(firebase.database().ref(`rooms/${room.key}`));
-    //firebase.remove(`rooms/${room.key}`);
-    //confirmation/warning popup
-
+      if (newName == null || newName == "") {
+        alert("If you would like to rename your room, you must enter a new name.")
+      } else {
+        console.log("rename initiated");
+        console.log("reconfiguring state");
+        this.setState({ roomButtonFunction: "enter" });
+        if (isSameRoom) {
+          this.setState({
+            activeRoom: undefined,
+            activeRoomKey: '',
+            activeIndex: undefined,
+            activeRoomName: ''
+          });
+        }
+        var updates = {};
+        updates['/name'] = newName;
+        return roomRef.update(updates);
+      }
+    }
   }
+
 
   render() {
     return (
@@ -89,10 +120,11 @@ class App extends Component {
           <RoomList
             firebase={firebase}
             handleRoomEnterClick={(room, index) => this.handleRoomEnterClick(room, index)}
-            handleRoomDeleteClick={(room, index) => this.handleRoomDeleteClick(room, index)}
+            handleSpecialRoomClick={(room, index) => this.handleSpecialRoomClick(room, index)}
             activeRoomKey={this.state.activeRoomKey}
-            handleDeleteCancelClick={() => this.handleDeleteCancelClick()}
-            enterOrDeleteRoom={this.state.enterOrDeleteRoom}
+            handleDeleteButtonClick={() => this.handleDeleteButtonClick()}
+            handleRenameButtonClick={() => this.handleRenameButtonClick()}
+            roomButtonFunction={this.state.roomButtonFunction}
           />
         </aside>
         <main>
