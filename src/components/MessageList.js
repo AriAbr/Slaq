@@ -23,6 +23,18 @@ class MessageList extends Component {
       const newMessagesArray = this.state.messages.filter( message => message.key !== deletedMessage.key);
       this.setState({ messages: newMessagesArray });
     });
+    this.messagesRef.on('child_changed', snapshot => {
+      const changedMessage = snapshot.val();
+      changedMessage.key = snapshot.key;
+      const newMessagesArray = this.state.messages.map(message => {
+        if (message.key === changedMessage.key) {
+          return changedMessage
+        } else {
+          return message
+        }
+      })
+      this.setState({ messages: newMessagesArray });
+    });
   }
 
   handleMessageSubmit(e) {
@@ -44,14 +56,27 @@ class MessageList extends Component {
 
   handleDeleteMessageClick(message, index) {
     const deleteMessageRef = this.props.firebase.database().ref(`messages/${message.key}`);
-    console.log(`handleDeleteMessageClick executed on "${message.content}"`);
-    //confirm -- do you want to delete? cant be undone...
+    //confirm
     if (window.confirm(`Are you sure you want to DELETE this message? This cannot be undone.`)) {
-      console.log(`message delete confirm executed`);
+      //delete message
       deleteMessageRef.remove();
+    }
+  }
 
-      //if yes, delete message
-      //make new event listener
+  handleEditMessageClick(message, index) {
+    const editMessageRef = this.props.firebase.database().ref(`messages/${message.key}`);
+    //prompt new message
+    var newMessage = prompt(`Edit your message:`, message.content);
+
+    // eslint-disable-next-line
+    if (newMessage === message.content) {
+      return;
+    } else {
+      console.log("edit message initiated");
+
+      var updates = {};
+      updates['/content'] = newMessage;
+      return editMessageRef.update(updates);
     }
   }
 
@@ -109,6 +134,12 @@ class MessageList extends Component {
               <p className="message-username">{message.username}</p>
               <p className="message-content">{message.content}</p>
               <p className="message-sentAt">{this.convertTimestamp(message.sentAt)}</p>
+              <button
+                className="edit-message-button"
+                onClick={() => this.handleEditMessageClick(message, index)}
+              >
+                Edit
+              </button>
               <button
                 className="delete-message-button"
                 onClick={() => this.handleDeleteMessageClick(message, index)}
