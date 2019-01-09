@@ -10,23 +10,22 @@ class User extends Component {
   }
 
   signInPopup(){
+    //sign in to new account
     const provider = new this.props.firebase.auth.GoogleAuthProvider();
     //force choose account popup
     provider.setCustomParameters({
       prompt: 'select_account'
     });
-
-    this.props.firebase.auth().signInWithPopup( provider );
-    // this.props.firebase.auth().signInWithRedirect(provider);
-
-  }
-
-  signOut() {
-    this.props.firebase.auth().signOut();
+    this.props.firebase.auth().signInWithPopup( provider )
   }
 
   componentDidMount() {
+
     this.props.firebase.auth().onAuthStateChanged ( user => {
+      if (this.props.user) {
+        const userRef = this.props.firebase.database().ref(`users/${this.props.user.key}`);
+        userRef.remove();
+      }
       this.props.setUser(user);
     });
   }
@@ -54,7 +53,7 @@ class User extends Component {
         </button>
         <button
           id="signout-button"
-          onClick={ () => this.signOut() }
+          onClick={ () => this.props.signOut() }
         >
           Sign Out
         </button>

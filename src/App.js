@@ -26,12 +26,47 @@ class App extends Component {
       activeRoomKey: '',
       activeRoomName: '',
       user: undefined,
-      roomButtonFunction: "enter"
+      roomButtonFunction: "enter",
+      onlineUsers: [],
     };
+    this.usersRef =  firebase.database().ref('users');
+  }
+
+  componentDidMount() {
+    this.setState({ onlineUsers: [], user: undefined });
+    this.usersRef.on('child_added', snapshot => {
+      const user = snapshot.val();
+      user.key = snapshot.key;
+      this.setState({ onlineUsers: this.state.onlineUsers.concat( user ) });
+    });
+    this.usersRef.on('child_removed', snapshot => {
+      const signOffUser = snapshot.val();
+      signOffUser.key = snapshot.key;
+      const newUsersArray = this.state.onlineUsers.filter( user => user.key !== signOffUser.key);
+      this.setState({ onlineUsers: newUsersArray });
+    });
+    window.addEventListener("beforeunload", (ev) => {
+      ev.preventDefault();
+      this.signOut();
+    });
   }
 
   setUser(user){
+    if (user) {
+      if (this.state.user) {
+        const userRef = firebase.database().ref(`users/${this.state.user.key}`);
+        userRef.remove();
+      }
+      // add user to list of online users in Firebase
+      var newUser = this.usersRef.push({ name: user.displayName });
+      user.key = newUser.key;
+    }
     this.setState({ user: user });
+  }
+
+  signOut() {
+    //remove user from userRef
+    firebase.auth().signOut();
   }
 
   handleRoomEnterClick(room, index) {
@@ -67,7 +102,6 @@ class App extends Component {
     if (this.state.roomButtonFunction === "delete") {
       //delete the room
       if (window.confirm(`Are you sure you want to DELETE the room: "${room.name}"? This will permanently delete "${room.name}" for all participants.`)) {
-        console.log(`delete confirm executed`);
         this.setState({ roomButtonFunction: "enter" });
         if (isSameRoom) {
           this.setState({
@@ -79,18 +113,14 @@ class App extends Component {
         }
         clickedRoomRef.remove();
       }
-    }
-    else if (this.state.roomButtonFunction === "rename") {
+    } else if (this.state.roomButtonFunction === "rename") {
       // rename the room
-      console.log(`rename special function executed`);
       var newName = prompt(`Please enter a new name for ${room.name}:`);
 
       // eslint-disable-next-line
       if (newName == null || newName == "") {
         alert("to rename a room, you must enter a new name.")
       } else {
-        console.log("rename initiated");
-        console.log("reconfiguring state");
         this.setState({ roomButtonFunction: "enter" });
         if (isSameRoom) {
           this.setState({
@@ -109,6 +139,11 @@ class App extends Component {
 
 
   render() {
+
+    const onlineUsers = this.state.onlineUsers.map((user, index) =>
+      <p className='online-user' key={index}>{user.name}</p>
+    );
+
     return (
       <div className="App">
         This is the App div
@@ -116,7 +151,9 @@ class App extends Component {
           <User
             firebase={firebase}
             setUser={(user) => this.setUser(user)}
+            signOut={() => this.signOut()}
             user={this.state.user}
+            usersRef={this.usersRef}
           />
           <RoomList
             firebase={firebase}
@@ -136,6 +173,10 @@ class App extends Component {
             user={this.state.user}
           />
         </main>
+        <section id='presence'>
+          <h2 id='presence-title'>Online Users</h2>
+          {onlineUsers}
+        </section>
       </div>
     );
   }

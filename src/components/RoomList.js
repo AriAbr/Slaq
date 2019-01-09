@@ -107,16 +107,16 @@ class RoomList extends Component {
             Create a New Room
           </button>
           <button
-            id="delete-cancel-button"
-            onClick={() => this.props.handleDeleteButtonClick()}
-          >
-            {deleteButtonText}
-          </button>
-          <button
             id="rename-room-button"
             onClick={() => this.props.handleRenameButtonClick()}
           >
             {renameButtonText}
+          </button>
+          <button
+            id="delete-cancel-button"
+            onClick={() => this.props.handleDeleteButtonClick()}
+          >
+            {deleteButtonText}
           </button>
         </section>
       </div>
