@@ -146,8 +146,8 @@ class App extends Component {
 
     return (
       <div className="App">
-        This is the App div
         <aside>
+          <h1 id="app-title">Bloc Chat</h1>
           <User
             firebase={firebase}
             setUser={(user) => this.setUser(user)}
@@ -174,8 +174,10 @@ class App extends Component {
           />
         </main>
         <section id='presence'>
-          <h2 id='presence-title'>Online Users</h2>
-          {onlineUsers}
+          <h2 id='presence-title'>Who's online?</h2>
+          <div id='user-list'>
+            {onlineUsers}
+          </div>
         </section>
       </div>
     );

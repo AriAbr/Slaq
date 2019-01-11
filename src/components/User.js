@@ -20,7 +20,6 @@ class User extends Component {
   }
 
   componentDidMount() {
-
     this.props.firebase.auth().onAuthStateChanged ( user => {
       if (this.props.user) {
         const userRef = this.props.firebase.database().ref(`users/${this.props.user.key}`);
@@ -38,21 +37,22 @@ class User extends Component {
       buttonLabel="Sign In";
     } else {
       welcomeMessage=`Hello, ${this.props.user.displayName}`;
-      buttonLabel="Switch Accounts";
+      buttonLabel="Not You?";
     }
 
     return (
-      <div>
-        This is the User component
+      <div id="user-div">
         <p id="welcome-message">{welcomeMessage}</p>
         <button
           id="signin-button"
+          className="account-button"
           onClick={ () => this.signInPopup() }
         >
           {buttonLabel}
         </button>
         <button
           id="signout-button"
+          className="account-button"
           onClick={ () => this.props.signOut() }
         >
           Sign Out

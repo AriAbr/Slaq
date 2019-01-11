@@ -1,6 +1,7 @@
 body {
   margin: 0;
   padding: 0;
+  background-color: #fbfbfb;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -11,4 +12,367 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+/* Sidebar */
+
+aside {
+  background-color: #523b4b;
+  color: #b8aeb5;
+  padding: 20px;
+  width: 180px;
+  height: 100%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+}
+
+#app-title{
+  margin-top:0;
+  margin-bottom: 20px;
+  font-size: 2em
+}
+
+#welcome-message{
+  font-weight: bold;
+  padding: 10px 0 0 0;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  width: 150px;
+  margin-left: 15px;
+  margin-right: 15px;
+  border-top-style: solid;
+  border-top-width: 1.5px;
+}
+
+#user-div {
+  padding-bottom: 10px;
+}
+
+aside button {
+  border-radius: 12px;
+  border-style: solid;
+  border-width: 0;
+  background-color: #3a2635;
+  color: #b8aeb5;
+  margin: 5px;
+  padding: 3px;
+  font-weight: bold;
+  transition: background-color .25s
+}
+
+.room-enter-button, .room-rename-button, .room-delete-button{
+  width: 150px;
+}
+
+aside button:hover, #active-room-button {
+  background-color: #b8aeb5;
+  color: #3a2635;
+}
+
+#create-room-button {
+  width: 150px;
+}
+
+#delete-cancel-button, #rename-room-button, #signin-button, #signout-button {
+  width: 70px;
+}
+
+#room-action-buttons {
+  padding: 0 20px 20px;
+  width: 180px;
+  background-color: #523b4b;
+  color: #b8aeb5;
+  position: fixed;
+  bottom:0;
+  left: 0;
+  overflow-x: hidden;
+}
+
+#create-room-button {
+  background-color: #025100;
+  color: #b8aeb5;
+}
+
+#create-room-button:hover {
+  background-color: #70ce6b;
+  color: #3a2635;
+}
+
+#rename-room-button, .room-rename-button:hover, .room-rename-button:hover#active-room-button {
+  background-color: #001984;
+  color: #b8aeb5;
+}
+
+#rename-room-button:hover, .room-rename-button, .room-rename-button#active-room-button {
+  background-color: #778ad6;
+  color: #3a2635;
+}
+
+#delete-cancel-button, .room-delete-button:hover, .room-delete-button:hover#active-room-button {
+  background-color: #660000;
+  color: #b8aeb5;
+}
+
+#delete-cancel-button:hover, .room-delete-button, .room-delete-button#active-room-button {
+  background-color: #d66f6f;
+  color: #3a2635;
+}
+
+#room-action-buttons-buffer {
+  height: 145px;
+}
+
+
+#MessageList-component {
+  margin-left: 220px;
+}
+
+#room-list-title {
+  padding: 5px 0 0 0;
+  margin-bottom: 5px;
+  width: 150px;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-top: 0;
+  border-top-style: solid;
+  border-top-width: 1.5px;
+}
+
+#room-actions-title {
+  padding: 5px 0 0 0;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  width: 150px;
+  margin-left: 15px;
+  margin-right: 15px;
+  border-top-style: solid;
+  border-top-width: 1.5px;
+}
+
+
+/* Online Users */
+
+#presence {
+  background-color: lightblue;
+  padding: 20px;
+  width: 180px;
+  height:10px;
+  position: fixed;
+  top: 0;
+  right: 0px;
+  overflow: hidden;
+  padding-top: 3px;
+  border-bottom-left-radius:12px;
+  /* border-bottom-right-radius:12px; */
+  transition: height .5s;
+}
+
+#presence:hover {
+  height: 80%;
+}
+
+#presence-title {
+  margin-top: 0;
+  font-size: 1em;
+  color: #3a2635;
+}
+
+#user-list {
+  height: 95%;
+  width: 190px;
+  overflow-y: auto;
+}
+
+.online-user {
+  color: #3a2635;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+/* Message List */
+
+#MessageList-component {
+  /* background-color: green; */
+  text-align: center;
+}
+
+#signin-message {
+  width: 75%;
+  font-size: 1.5em;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 80px;
+  color: #3a2635;
+}
+
+#choose-room-message {
+  width: 75%;
+  font-size: 1.5em;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 165px;
+  color: #3a2635;
+}
+
+#message-form {
+  background-color: #b8aeb5;
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 220px);
+  /* Firefox */
+  width: -moz-calc(100% - 220px);
+  /* WebKit */
+  width: -webkit-calc(100% - 220px);
+  /* Opera */
+  width: -o-calc(100% - 220px);
+  height: -20px
+}
+
+fieldset {
+  border-width: 0;
+}
+
+#new-message-input {
+  height: 29px;
+  width: 85%;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border-style: solid;
+  border-width: 0;
+  padding-left: 8px;
+  font-size:1em;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  border-width: 3px;
+  border-style: solid;
+  border-color: #523b4b;
+  border-right: 0;
+}
+
+#send-message-button {
+  background-color: #b8aeb5;
+  color: #523b4b;
+  font-weight: bold;
+  height: 37px;
+  font-size:1em;
+  width: 40px;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border-width: 0;
+  font-size:1em;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  border-width: 3px;
+  border-style: solid;
+  border-color: #523b4b;
+  transition: background-color .25s;
+}
+
+#send-message-button:hover {
+  background-color: #523b4b;
+  color: #b8aeb5;
+}
+
+#room-title{
+  text-align: left;
+  padding: 0px 10px;
+  margin: 230px;
+  background-color: #fbfbfb;
+  border-bottom-right-radius: 12px;
+  color: #523b4b;
+  font-weight: bold;
+  border-bottom: 0px;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  border-style: solid;
+  border-color: #523b4b;
+  font-size: 1.5em;
+  width: auto;
+  height:33px;
+  position: fixed;
+  margin: 0;
+  top: 0;
+  left: 220px;
+  z-index:1;
+  overflow: hidden;
+}
+
+/* Messages */
+
+#messages {
+  position: fixed;
+  top: 33px;
+  bottom: 60.6px;
+  left: 220px;
+  right: 0px;
+  overflow-y: scroll;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.message {
+  /* background-color: lightgreen; */
+  margin: 2px 0;
+  text-align: left;
+}
+
+.message-username {
+  color: #303134;
+  display: inline-block;
+  margin: 0;
+  margin-left: 9px;
+  font-weight: bold;
+}
+
+.message-sentAt {
+  color: #82858a;
+  display: inline-block;
+  margin: 0px;
+  margin-left: 9px;
+  font-size: .8em;
+}
+
+.message-content {
+  color: #4c4d4f;
+  margin: 0;
+  margin-left: 9px;
+  text-align: left;
+}
+
+.edit-message-button, .delete-message-button {
+  color: transparent;
+  font-size: .8em;
+  background-color: transparent;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  border-style: solid;
+  padding: 0;
+  border:0;
+}
+
+.edit-message-button {
+  margin-left: 9px;
+}
+
+.edit-message-button:hover, .delete-message-button:hover {
+  background-color: #b8aeb5;
+  color: white;
+}
+
+.message:hover > .btn {
+  color: #303134;
+  font-size: .8em;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  border-style: solid;
+  padding: 0;
+  border:0;
+  transition: background-color .25s;
 }

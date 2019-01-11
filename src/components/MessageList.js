@@ -110,67 +110,68 @@ class MessageList extends Component {
 
 
   render() {
+
     if (!this.props.user) {
       return (
-        <div>
-        This is the MessageList component
-          <p id="choose-room-message">Please sign in to view and send messages</p>
+        <div id="MessageList-component">
+
+          <p id="signin-message">Sign in, then choose or create a room to view and send messages.</p>
         </div>
       );
     } else if (!this.props.activeRoomName) {
       return (
-        <div>
-        This is the MessageList component
-          <p id="choose-room-message">Choose an existing chat room or create a new one to view and send messages</p>
+        <div id="MessageList-component">
+          <p id="choose-room-message">Choose an existing chat room or create a new one.</p>
         </div>
       );
     } else {
+
       const messages = this.state.messages
         .filter(message => message.roomId === this.props.activeRoomKey)
         .map( (message, index) => {
           return (
             <div className="message" key={index}>
-              THIS IS THE BEGINNING OF A MESSAGE
               <p className="message-username">{message.username}</p>
-              <p className="message-content">{message.content}</p>
               <p className="message-sentAt">{this.convertTimestamp(message.sentAt)}</p>
               <button
-                className="edit-message-button"
+                className="edit-message-button btn"
                 onClick={() => this.handleEditMessageClick(message, index)}
               >
-                Edit
+                <i className="fa fa-edit"></i>
               </button>
               <button
-                className="delete-message-button"
+                className="delete-message-button btn"
                 onClick={() => this.handleDeleteMessageClick(message, index)}
               >
-                Delete
+                <i className="fa fa-remove"></i>
               </button>
+              <p className="message-content">{message.content}</p>
+
             </div>
           );
         });
       return (
-        <div>
-          <p>This is the MessageList component</p>
+        <div id="MessageList-component">
           <h1 id="room-title">
             {this.props.activeRoomName}
           </h1>
-          <section>
+          <section id='messages'>
             {messages}
           </section>
-          <form onSubmit={ (e) => this.handleMessageSubmit(e) }>
+          <form id='message-form'>
             <fieldset>
-              <legend>Send a Message</legend>
+              {/*<legend>Send a Message</legend>*/}
               {/* <label>
                  Meesage: */}
                 <input
                   type="text"
                   id="new-message-input"
                   value={ this.state.newMessageContent }
+                  placeholder="Send a message..."
                   onChange={ (e) => this.handleMessageInputChange(e) }
                 />
               {/* </label> */}
-              <input type="submit" value="Send" />
+              <button className="btn" onClick= { (e) => this.handleMessageSubmit(e) } id="send-message-button"><i className="fa fa-paper-plane"></i></button>
             </fieldset>
           </form>
         </div>
