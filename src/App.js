@@ -35,12 +35,14 @@ class App extends Component {
   componentDidMount() {
     this.setState({ onlineUsers: [], user: undefined });
     this.usersRef.on('child_added', snapshot => {
+      debugger;
       const user = snapshot.val();
       user.key = snapshot.key;
       this.setState({ onlineUsers: this.state.onlineUsers.concat( user ) });
     });
     this.usersRef.on('child_removed', snapshot => {
       const signOffUser = snapshot.val();
+      debugger;
       signOffUser.key = snapshot.key;
       const newUsersArray = this.state.onlineUsers.filter( user => user.key !== signOffUser.key);
       this.setState({ onlineUsers: newUsersArray });
@@ -143,11 +145,10 @@ class App extends Component {
     const onlineUsers = this.state.onlineUsers.map((user, index) =>
       <p className='online-user' key={index}>{user.name}</p>
     );
-
     return (
       <div className="App">
         <aside>
-          <h1 id="app-title">Bloc Chat</h1>
+          <h1 id="app-title">Slaq</h1>
           <User
             firebase={firebase}
             setUser={(user) => this.setUser(user)}
