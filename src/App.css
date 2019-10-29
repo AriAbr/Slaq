@@ -30,3 +30,12 @@
     transform: rotate(360deg);
   }
 }
+
+#MessageList-component{
+  height: 100vh;
+}
+
+.padded-room-element{
+  padding-right: 20px;
+  padding-left: 20px;
+}

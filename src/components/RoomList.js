@@ -38,15 +38,19 @@ class RoomList extends Component {
   }
 
   handleCreateButtonClick() {
-    const newRoomName = prompt(`Enter name for your room:`);
-    // eslint-disable-next-line
-    if (newRoomName == null || newRoomName == "") {
-      alert("To create a new room, you must give it a name.")
-    } else {
-      this.roomsRef.push({
-        name: newRoomName
-      });
-    }
+    this.props.setRoomButtonsToEnter(() => {
+      setTimeout(() => {
+        const newRoomName = prompt(`Enter name for your room:`);
+        // eslint-disable-next-line
+        if (newRoomName == null || newRoomName == "") {
+          alert("To create a new room, you must give it a name.")
+        } else {
+          this.roomsRef.push({
+            name: newRoomName
+          });
+        }
+      }, 200); //delaying this so room buttons can update before the prompt freezes everything if needed
+    })
   }
 
   render() {
@@ -94,35 +98,42 @@ class RoomList extends Component {
       }
     });
 
+    var roomActions = <></>
+    if(this.props.user !== null){
+      roomActions =         <><div id="room-action-buttons-buffer"/>
+              <section id="room-action-buttons">
+                <h3 id='room-actions-title'>Room Actions</h3>
+                  <button
+                    id="create-room-button"
+                    className="room-action-button"
+                    onClick={() => this.handleCreateButtonClick()}
+                  >
+                    Create
+                  </button>
+                  <button
+                    id="rename-room-button"
+                    className="room-action-button"
+                    onClick={() => this.props.handleRenameButtonClick()}
+                  >
+                    {renameButtonText}
+                  </button>
+                  <button
+                    id="delete-cancel-button"
+                    className="room-action-button"
+                    onClick={() => this.props.handleDeleteButtonClick()}
+                  >
+                    {deleteButtonText}
+                  </button>
+              </section></>
+    }
+
     return (
       <div id="RoomsList-component">
-        <h3 id='room-list-title'>Rooms</h3>
-        {rooms}
-        <div id="room-action-buttons-buffer"/>
-        <section id="room-action-buttons">
-          <h3 id='room-actions-title'>Room Actions</h3>
-            <button
-              id="create-room-button"
-              className="room-action-button"
-              onClick={() => this.handleCreateButtonClick()}
-            >
-              Create
-            </button>
-            <button
-              id="rename-room-button"
-              className="room-action-button"
-              onClick={() => this.props.handleRenameButtonClick()}
-            >
-              {renameButtonText}
-            </button>
-            <button
-              id="delete-cancel-button"
-              className="room-action-button"
-              onClick={() => this.props.handleDeleteButtonClick()}
-            >
-              {deleteButtonText}
-            </button>
-        </section>
+        <h3 id='room-list-title' className="padded-room-element">Rooms</h3>
+        <div id="room-list">
+          {rooms}
+        </div>
+        {roomActions}
       </div>
     );
   }

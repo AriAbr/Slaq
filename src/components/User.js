@@ -33,15 +33,26 @@ class User extends Component {
     var welcomeMessage="";
     var buttonLabel="";
     if (!this.props.user) {
-      welcomeMessage="Hello, Guest";
+      welcomeMessage="Hi, Guest!";
       buttonLabel="Sign In";
     } else {
-      welcomeMessage=`Hello, ${this.props.user.displayName}`;
+      welcomeMessage=`Hi, ${this.props.user.displayName}!`;
       buttonLabel="Not You?";
     }
 
+    var logoutButton = <></>
+    if(this.props.user){
+      logoutButton = <button
+                        id="signout-button"
+                        className="account-button"
+                        onClick={ () => this.props.signOut() }
+                      >
+                        Sign Out
+                      </button>
+    }
+
     return (
-      <div id="user-div">
+      <div id="user-div" className="padded-room-element">
         <p id="welcome-message">{welcomeMessage}</p>
         <button
           id="signin-button"
@@ -50,13 +61,7 @@ class User extends Component {
         >
           {buttonLabel}
         </button>
-        <button
-          id="signout-button"
-          className="account-button"
-          onClick={ () => this.props.signOut() }
-        >
-          Sign Out
-        </button>
+        {logoutButton}
       </div>
     );
   }

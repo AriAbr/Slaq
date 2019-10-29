@@ -29,27 +29,16 @@ class App extends Component {
       roomButtonFunction: "enter",
       onlineUsers: [],
     };
-    this.usersRef =  firebase.database().ref('users');
   }
 
   componentDidMount() {
-    this.setState({ onlineUsers: [], user: undefined });
-    this.usersRef.on('child_added', snapshot => {
-      debugger;
-      const user = snapshot.val();
-      user.key = snapshot.key;
-      this.setState({ onlineUsers: this.state.onlineUsers.concat( user ) });
-    });
-    this.usersRef.on('child_removed', snapshot => {
-      const signOffUser = snapshot.val();
-      debugger;
-      signOffUser.key = snapshot.key;
-      const newUsersArray = this.state.onlineUsers.filter( user => user.key !== signOffUser.key);
-      this.setState({ onlineUsers: newUsersArray });
-    });
-    window.addEventListener("beforeunload", (ev) => {
-      ev.preventDefault();
-      this.signOut();
+    var fakeThis = this;
+    //set roomButtonFunction to "enter" when clicking away from special buttons
+    document.getElementById('root').addEventListener("click", function(e){
+      var willResetToEnter = (fakeThis.state.roomButtonFunction === 'delete' && !["room-delete-button"].includes(e.path[0].className)) || (fakeThis.state.roomButtonFunction === 'rename' && !["room-rename-button"].includes(e.path[0].className))
+      if(willResetToEnter){
+        fakeThis.setState({ roomButtonFunction: "enter" });
+      }
     });
   }
 
@@ -59,9 +48,6 @@ class App extends Component {
         const userRef = firebase.database().ref(`users/${this.state.user.key}`);
         userRef.remove();
       }
-      // add user to list of online users in Firebase
-      var newUser = this.usersRef.push({ name: user.displayName });
-      user.key = newUser.key;
     }
     this.setState({ user: user });
   }
@@ -80,6 +66,14 @@ class App extends Component {
         activeRoomKey: room.key,
         activeRoomName: room.name });
     }
+  }
+
+  setRoomButtonsToEnter(callback){
+    this.setState({ roomButtonFunction: "enter" }, () => {
+      if(callback){
+        callback();
+      }
+    })
   }
 
   handleDeleteButtonClick() {
@@ -114,6 +108,8 @@ class App extends Component {
           });
         }
         clickedRoomRef.remove();
+      } else {
+        this.setState({ roomButtonFunction: "enter" });
       }
     } else if (this.state.roomButtonFunction === "rename") {
       // rename the room
@@ -146,25 +142,28 @@ class App extends Component {
       <p className='online-user' key={index}>{user.name}</p>
     );
     return (
-      <div className="App">
+      <div className="App" id="App">
         <aside>
-          <h1 id="app-title">Slaq</h1>
-          <User
-            firebase={firebase}
-            setUser={(user) => this.setUser(user)}
-            signOut={() => this.signOut()}
-            user={this.state.user}
-            usersRef={this.usersRef}
-          />
-          <RoomList
-            firebase={firebase}
-            handleRoomEnterClick={(room, index) => this.handleRoomEnterClick(room, index)}
-            handleSpecialRoomClick={(room, index) => this.handleSpecialRoomClick(room, index)}
-            activeRoomKey={this.state.activeRoomKey}
-            handleDeleteButtonClick={() => this.handleDeleteButtonClick()}
-            handleRenameButtonClick={() => this.handleRenameButtonClick()}
-            roomButtonFunction={this.state.roomButtonFunction}
-          />
+          <div id="aside-child">
+            <h1 id="app-title" className="padded-room-element">Slaq</h1>
+            <User
+              firebase={firebase}
+              setUser={(user) => this.setUser(user)}
+              signOut={() => this.signOut()}
+              user={this.state.user}
+            />
+            <RoomList
+              firebase={firebase}
+              handleRoomEnterClick={(room, index) => this.handleRoomEnterClick(room, index)}
+              handleSpecialRoomClick={(room, index) => this.handleSpecialRoomClick(room, index)}
+              activeRoomKey={this.state.activeRoomKey}
+              handleDeleteButtonClick={() => this.handleDeleteButtonClick()}
+              handleRenameButtonClick={() => this.handleRenameButtonClick()}
+              setRoomButtonsToEnter={(callback) => this.setRoomButtonsToEnter(callback)}
+              roomButtonFunction={this.state.roomButtonFunction}
+              user={this.state.user}
+            />
+          </div>
         </aside>
         <main>
           <MessageList
@@ -174,12 +173,7 @@ class App extends Component {
             user={this.state.user}
           />
         </main>
-        <section id='presence'>
-          <h2 id='presence-title'>Who's online?</h2>
-          <div id='user-list'>
-            {onlineUsers}
-          </div>
-        </section>
+
       </div>
     );
   }
