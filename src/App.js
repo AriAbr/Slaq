@@ -27,7 +27,6 @@ class App extends Component {
       activeRoomName: '',
       user: undefined,
       roomButtonFunction: "enter",
-      onlineUsers: [],
     };
   }
 
@@ -138,9 +137,6 @@ class App extends Component {
 
   render() {
 
-    const onlineUsers = this.state.onlineUsers.map((user, index) =>
-      <p className='online-user' key={index}>{user.name}</p>
-    );
     return (
       <div className="App" id="App">
         <aside>
