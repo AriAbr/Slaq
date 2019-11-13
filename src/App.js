@@ -34,7 +34,8 @@ class App extends Component {
     var fakeThis = this;
     //set roomButtonFunction to "enter" when clicking away from special buttons
     document.getElementById('root').addEventListener("click", function(e){
-      var willResetToEnter = (fakeThis.state.roomButtonFunction === 'delete' && !["room-delete-button"].includes(e.path[0].className)) || (fakeThis.state.roomButtonFunction === 'rename' && !["room-rename-button"].includes(e.path[0].className))
+      var path = e.path || (e.composedPath && e.composedPath());
+      var willResetToEnter = (fakeThis.state.roomButtonFunction === 'delete' && !["room-delete-button"].includes(path[0].className)) || (fakeThis.state.roomButtonFunction === 'rename' && !["room-rename-button"].includes(path[0].className))
       if(willResetToEnter){
         fakeThis.setState({ roomButtonFunction: "enter" });
       }
