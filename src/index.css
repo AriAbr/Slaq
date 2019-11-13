@@ -255,7 +255,8 @@ aside button:hover, #active-room-button {
   width: -webkit-calc(100% - 220px);
   /* Opera */
   width: -o-calc(100% - 220px);
-  height: -20px
+  height: -20px;
+  white-space: nowrap;
 }
 
 fieldset {
@@ -264,7 +265,7 @@ fieldset {
 
 #new-message-input {
   height: 29px;
-  width: 85%;
+  width: calc(100% - 60px);
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
   border-style: solid;
@@ -277,6 +278,7 @@ fieldset {
   border-style: solid;
   border-color: #523b4b;
   border-right: 0;
+  display: inline-block;
 }
 
 #send-message-button {
@@ -296,6 +298,7 @@ fieldset {
   border-style: solid;
   border-color: #523b4b;
   transition: background-color .25s;
+  display: inline-block;
 }
 
 #send-message-button:hover {
